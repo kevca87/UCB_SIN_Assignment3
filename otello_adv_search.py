@@ -45,7 +45,7 @@ def otello_actions(board:ndarray,rival_color:int):
         while board[row,column] != own_color and board[row,column]!=0 and row < board.shape[0]:
             row = row + 1
         if board[row,column] == own_color:
-            actions.append(adj)
+            actions.append((adj,[row,column]))
     
     #Down
     down_adjacencies = [[position[0]+1,position[1]] for position in rival_positions if board[position[0]+1,position[1]] == 0]
@@ -55,7 +55,7 @@ def otello_actions(board:ndarray,rival_color:int):
         while board[row,column] != own_color and board[row,column]!=0 and row >= 0:
             row = row - 1
         if board[row,column] == own_color:
-            actions.append(adj)
+            actions.append((adj,[row,column]))
     
     #Left
     left_adjacencies = [[position[0],position[1]-1] for position in rival_positions if board[position[0],position[1]-1] == 0]
@@ -65,7 +65,7 @@ def otello_actions(board:ndarray,rival_color:int):
         while board[row,column] != own_color and board[row,column]!=0 and column >= 0:
             column = column + 1
         if board[row,column] == own_color:
-            actions.append(adj)
+            actions.append((adj,[row,column]))
     
     #Right
     right_adjacencies = [[position[0],position[1]+1] for position in rival_positions if board[position[0],position[1]+1] == 0]
@@ -75,7 +75,7 @@ def otello_actions(board:ndarray,rival_color:int):
         while board[row,column] != own_color and board[row,column]!=0 and is_on_board(board,row,column):#column < board.shape[1]:
             column = column - 1
         if board[row,column] == own_color:
-            actions.append(adj)
+            actions.append((adj,[row,column]))
 
     #up_left
     up_left_adjacencies = [[position[0]-1,position[1]-1] for position in rival_positions if board[position[0]-1,position[1]-1] == 0]
@@ -86,7 +86,7 @@ def otello_actions(board:ndarray,rival_color:int):
             column = column + 1
             row = row + 1
         if board[row,column] == own_color:
-            actions.append(adj)
+            actions.append((adj,[row,column]))
 
 
     #Right-U
@@ -98,7 +98,7 @@ def otello_actions(board:ndarray,rival_color:int):
             column = column - 1
             row = row + 1
         if board[row,column] == own_color:
-            actions.append(adj)
+            actions.append((adj,[row,column]))
     
     #Left-D
     down_left_adjacencies = [[position[0]+1,position[1]-1] for position in rival_positions if board[position[0]+1,position[1]-11] == 0]
@@ -109,7 +109,7 @@ def otello_actions(board:ndarray,rival_color:int):
             column = column + 1
             row = row - 1
         if board[row,column] == own_color:
-            actions.append(adj)
+            actions.append((adj,[row,column]))
 
 
     #Right-d
@@ -121,7 +121,7 @@ def otello_actions(board:ndarray,rival_color:int):
             column = column - 1
             row = row - 1
         if board[row,column] == own_color:
-            actions.append(adj)
+            actions.append((adj,[row,column]))
 
     return actions
 
