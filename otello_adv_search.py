@@ -1,3 +1,4 @@
+from turtle import up
 import numpy as np
 from numpy import ndarray
 import copy
@@ -10,35 +11,14 @@ def otello_utility(state:ndarray):
 def otello_player(state:ndarray):
     return 5
 
-def get_adjacents(board:ndarray,adjacent_color:int):
-    rival_positions = np.where(board == adjacent_color)
-    rival_positions = np.array([[row,column] for row, column in zip(rival_positions[0],rival_positions[1])])
-    #Up
-    up_adjacencies = [[position[0]-1,position[1]] for position in rival_positions if board[position[0]-1,position[1]] == 0]
-    #Down
-    down_adjacencies = [[position[0]+1,position[1]] for position in rival_positions if board[position[0]+1,position[1]] == 0]
-    #Left
-    left_adjacencies = [[position[0],position[1]-1] for position in rival_positions if board[position[0],position[1]-1] == 0]
-    #Right
-    right_adjacencies = [[position[0],position[1]+1] for position in rival_positions if board[position[0],position[1]+1] == 0]
-    # print('up:',up_adjacencies)
-    # print('down:',down_adjacencies)
-    # print('left:',left_adjacencies)
-    # print('right:',right_adjacencies)
-    #up_left
-    up_left_adjacencies = [[position[0]-1,position[1]-1] for position in rival_positions if board[position[0]-1,position[1]-1] == 0]
-    #Right-U
-    up_right_adjacencies = [[position[0]-1,position[1]+1] for position in rival_positions if board[position[0]-1,position[1]+1] == 0]
-    #Left-D
-    down_left_adjacencies = [[position[0]+1,position[1]-1] for position in rival_positions if board[position[0]+1,position[1]-11] == 0]
-    #Right-d
-    down_right_adjacencies = [[position[0]+1,position[1]+1] for position in rival_positions if board[position[0]+1,position[1]+1] == 0]
-    # print('up_left:',up_left_adjacencies)
-    # print('up_right:',up_right_adjacencies)
-    # print('down-left:',down_left_adjacencies)
-    # print('down-right:',down_right_adjacencies)
-    adjacencies = np.unique(up_adjacencies+down_adjacencies+left_adjacencies+right_adjacencies+up_left_adjacencies+up_right_adjacencies+down_left_adjacencies+down_right_adjacencies,axis=0)
-    return adjacencies
+def get_oposite_color(color):
+    new_color = 2 if color == 1 else 1
+    return new_color
+
+def is_on_board(board,row,column):
+    return row < board.shape[0] and row >= 0 and column < board.shape[1] and column >= 0
+
+
     
     
     
@@ -51,13 +31,101 @@ initialBoard[3,4] = 1
 print(initialBoard)
 
 
-print(get_adjacents(initialBoard,2))
+def otello_actions(board:ndarray,rival_color:int):
+    actions = []
 
-def otello_actions(state:ndarray):
-    victim = 2
-    adjacencies = get_adjacents(state,victim)
+    rival_positions = np.where(board == rival_color)
+    rival_positions = np.array([[row,column] for row, column in zip(rival_positions[0],rival_positions[1])])
+    #Up
+    up_adjacencies = [[position[0]-1,position[1]] for position in rival_positions if board[position[0]-1,position[1]] == 0]
+    own_color = get_oposite_color(rival_color)
+    for adj in up_adjacencies:
+        row = adj[0] + 1
+        column = adj[1]
+        while board[row,column] != own_color and board[row,column]!=0 and row < board.shape[0]:
+            row = row + 1
+        if board[row,column] == own_color:
+            actions.append(adj)
     
-    return 5
+    #Down
+    down_adjacencies = [[position[0]+1,position[1]] for position in rival_positions if board[position[0]+1,position[1]] == 0]
+    for adj in down_adjacencies:
+        row = adj[0] - 1 
+        column = adj[1]
+        while board[row,column] != own_color and board[row,column]!=0 and row >= 0:
+            row = row - 1
+        if board[row,column] == own_color:
+            actions.append(adj)
+    
+    #Left
+    left_adjacencies = [[position[0],position[1]-1] for position in rival_positions if board[position[0],position[1]-1] == 0]
+    for adj in left_adjacencies:
+        row = adj[0]
+        column = adj[1] + 1
+        while board[row,column] != own_color and board[row,column]!=0 and column >= 0:
+            column = column + 1
+        if board[row,column] == own_color:
+            actions.append(adj)
+    
+    #Right
+    right_adjacencies = [[position[0],position[1]+1] for position in rival_positions if board[position[0],position[1]+1] == 0]
+    for adj in right_adjacencies:
+        row = adj[0]
+        column = adj[1] - 1
+        while board[row,column] != own_color and board[row,column]!=0 and is_on_board(board,row,column):#column < board.shape[1]:
+            column = column - 1
+        if board[row,column] == own_color:
+            actions.append(adj)
+
+    #up_left
+    up_left_adjacencies = [[position[0]-1,position[1]-1] for position in rival_positions if board[position[0]-1,position[1]-1] == 0]
+    for adj in up_left_adjacencies:
+        row = adj[0] + 1
+        column = adj[1] +1
+        while board[row,column] != own_color and board[row,column]!=0 and is_on_board(board,row,column):
+            column = column + 1
+            row = row + 1
+        if board[row,column] == own_color:
+            actions.append(adj)
+
+
+    #Right-U
+    up_right_adjacencies = [[position[0]-1,position[1]+1] for position in rival_positions if board[position[0]-1,position[1]+1] == 0]
+    for adj in up_right_adjacencies:
+        row = adj[0] + 1
+        column = adj[1] - 1
+        while board[row,column] != own_color and board[row,column]!=0 and is_on_board(board,row,column):
+            column = column - 1
+            row = row + 1
+        if board[row,column] == own_color:
+            actions.append(adj)
+    
+    #Left-D
+    down_left_adjacencies = [[position[0]+1,position[1]-1] for position in rival_positions if board[position[0]+1,position[1]-11] == 0]
+    for adj in down_left_adjacencies:
+        row = adj[0] -1
+        column = adj[1] + 1
+        while board[row,column] != own_color and board[row,column]!=0 and is_on_board(board,row,column):
+            column = column + 1
+            row = row - 1
+        if board[row,column] == own_color:
+            actions.append(adj)
+
+
+    #Right-d
+    down_right_adjacencies = [[position[0]+1,position[1]+1] for position in rival_positions if board[position[0]+1,position[1]+1] == 0]
+    for adj in down_right_adjacencies:
+        row = adj[0] - 1
+        column = adj[1] - 1
+        while board[row,column] != own_color and board[row,column]!=0 and is_on_board(board,row,column):
+            column = column - 1
+            row = row - 1
+        if board[row,column] == own_color:
+            actions.append(adj)
+
+    return actions
+
+print(otello_actions(initialBoard,2))
 
 def otello_terminal_test(state:ndarray):
     return 5
