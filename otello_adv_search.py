@@ -143,14 +143,28 @@ def otello_heuristic(state:ndarray):
     return 5
 
 
-def draw_diagonal(next_state,min_row,max_row, min_column,max_column,color):
-    initial_min_column = min_column
-    while min_row <= max_row:
-        min_column = initial_min_column
-        while min_column <= max_column:
-            next_state[min_row,min_column] = color
-            min_column = min_column + 1
-            min_row = min_row + 1
+def draw_diagonal(next_state,origin,destiny,color):
+    o_row = origin[0]
+    o_col = origin[1]
+    d_row = destiny[0]
+    d_col = destiny[1]
+    while o_row!=d_row and o_col!=d_col:
+        if(o_row<d_row):
+            o_row=o_row+1
+        if(o_row>d_row):
+            o_row=o_row-1
+        if(o_col>d_col):
+            o_col=o_col-1
+        if(o_col<d_col):
+            o_col=o_col+1
+        next_state[o_row,o_col] = color
+    #initial_min_column = min_column
+    #while min_row <= max_row:
+    #    min_column = initial_min_column
+    #    while min_column <= max_column:
+    #        next_state[min_row,min_column] = color
+    #        min_column = min_column + 1
+    #        min_row = min_row + 1
 
 # action = np.array([row,column,color])[]
 
@@ -170,7 +184,8 @@ def otello_result(state:ndarray, action, color:int):
     adj_column = adjacency[1]
     flank_row = flank_pair[0]
     flank_column = flank_pair[1] 
-    
+    print("ADJ",adjacency)
+    print("FLANK",flank_pair)
     max_row = max(adj_row,flank_row)
     min_row = min(adj_row,flank_row)
 
@@ -187,7 +202,8 @@ def otello_result(state:ndarray, action, color:int):
                 min_column = min_column + 1
             min_row = min_row + 1
     else:
-        draw_diagonal(next_state,min_row,max_row, min_column,max_column,color)
+        draw_diagonal(next_state,flank_pair,adjacency,color)
+        #draw_diagonal(next_state,min_row,max_row, min_column,max_column,color)
     return next_state
 
 def otello_utility(state:ndarray):
