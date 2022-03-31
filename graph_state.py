@@ -56,7 +56,7 @@ while movement != 'exit':
     blacks = np.where(state_i == 1)
     whites = np.where(state_i == -1)
     empties = np.where(state_i == 0)
-    print('whites:',whites)
+    #print('whites:',whites)
     
     plt.scatter(blacks[1],blacks[0]* -1,color='black',s=500)
     plt.scatter(whites[1],whites[0]* -1,  facecolors='white', edgecolors='black',s=500)
@@ -65,14 +65,23 @@ while movement != 'exit':
     fig.canvas.draw()
 
     movement = input()
-    action = to_action(movement)
-    print(action)
+    if movement == 'exit':
+        break
+
+    movement = to_action(movement)
+    #print(action)
     
     actions = otello_actions(state_i,color * -1)
-    print(actions)
+    #print(actions)
 
-    action = list(filter(lambda a: a[0] == action, actions))[0]
-    print(action)
+    actions = list(filter(lambda a: a[movement[0],movement[1]] != 0, actions))
 
-    state_i = otello_result(state_i,action,color)
+    if len(actions) > 1:
+        for a in actions[1:]:
+            a[movement[0],movement[1]] = 0
+    
+    for action in actions:
+        #that allow draw eatings in differents directions at the same time.
+        #message 31/03 10:56
+        state_i = otello_result(state_i,action,color)
     color = color * -1
