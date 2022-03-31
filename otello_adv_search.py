@@ -12,7 +12,7 @@ def otello_player(state:ndarray):
     return 5
 
 def get_oposite_color(color):
-    new_color = 2 if color == 1 else 1
+    new_color = -1 if color == 1 else 1
     return new_color
 
 def is_on_board(board,row,column):
@@ -149,7 +149,7 @@ def draw_diagonal(next_state,min_row,max_row, min_column,max_column,color):
 # color 
 # 0 = empty
 # 1 = black
-# 2 = white
+# -1 = white
 
 
 # action = np.array([0,5,1])
@@ -182,15 +182,17 @@ def otello_result(state:ndarray, action, color:int):
         draw_diagonal(next_state,min_row,max_row, min_column,max_column,color)
     return next_state
 
+def otello_utility(state:ndarray):
+    return state.sum()
 
 initialBoard = np.zeros((8,8),dtype=int)
-initialBoard[3,3] = 2
-initialBoard[4,4] = 2
+initialBoard[3,3] = -1
+initialBoard[4,4] = -1
 initialBoard[4,3] = 1
 initialBoard[3,4] = 1
 print(initialBoard)
-print(otello_actions(initialBoard,2))
-action = otello_actions(initialBoard,2)[3]
+print(otello_actions(initialBoard,-1))
+action = otello_actions(initialBoard,-1)[3]
 print(action)
 s1 = otello_result(initialBoard,action,1)
 
@@ -199,6 +201,6 @@ print(s1)
 actions = otello_actions(s1,1)
 print(actions)
 action = actions[1]
-s2 = otello_result(s1,action,2)
+s2 = otello_result(s1,action,-1)
 print(s2)
-
+print(otello_utility(s2))
