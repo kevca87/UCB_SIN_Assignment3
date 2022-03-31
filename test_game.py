@@ -10,14 +10,6 @@ def to_action(movement):
     row = int(row_str) - 1
     column = ord(column_str) - 65
     return [row,column]
-# class TestMinMaxWithDepth(unittest.TestCase):
-
-#     def test_utility(self):
-#         o = MinMaxWithDepth()
-#         o.utility = otello_utility
-#         s0 = np.array([[],[],[]])
-#         expected_utility = 5
-#         self.assertEqual(o.utility(s0),expected_utility,f"Should be {expected_utility}")
  
 class TestGame(unittest.TestCase):
 
