@@ -13,9 +13,6 @@ def create_initial_state():
     s0[3,4] = 1
     return s0
 
-def otello_player(state:ndarray):
-    return 5
-
 def get_oposite_color(color):
     new_color = -1 if color == 1 else 1
     return new_color
@@ -23,8 +20,10 @@ def get_oposite_color(color):
 def is_on_board(board,row,column):
     return row < board.shape[0] and row >= 0 and column < board.shape[1] and column >= 0
 
-def otello_actions(board:ndarray,rival_color:int):
+def otello_actions(board:ndarray,color:int):
     actions = []
+
+    rival_color = color * -1
 
     rival_positions = np.where(board == rival_color)
     rival_positions = np.array([[row,column] for row, column in zip(rival_positions[0],rival_positions[1])])
@@ -174,18 +173,18 @@ def otello_actions(board:ndarray,rival_color:int):
 
     return new_actions
 
-def otello_terminal_test(state:ndarray):
-    return 5
+def otello_terminal_test(state:ndarray, color):
+    return len(otello_actions(state,color))  == 0
 
 def otello_heuristic(state:ndarray):
-    return 5
+    return state.sum()
 
 # color 
 # 0 = empty
 # 1 = black
 # -1 = white
 
-def otello_result(state:ndarray, action, color:int):
+def otello_result(state:ndarray, action):
     return state + action
 
 def otello_utility(state:ndarray):

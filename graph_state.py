@@ -71,7 +71,7 @@ while movement != 'exit':
     movement = to_action(movement)
     #print(action)
     
-    actions = otello_actions(state_i,color * -1)
+    actions = otello_actions(state_i,color)
     #print(actions)
 
     actions = list(filter(lambda a: a[movement[0],movement[1]] != 0, actions))
@@ -83,5 +83,5 @@ while movement != 'exit':
     for action in actions:
         #that allow draw eatings in differents directions at the same time.
         #message 31/03 10:56
-        state_i = otello_result(state_i,action,color)
+        state_i = otello_result(state_i,action)
     color = color * -1
