@@ -12,7 +12,10 @@ class MinMaxWithDepth:
 
     def arg_max(self,state):
         utilities = []
-        for a in self.actions(state):
+
+        own_color = 1 #negras
+
+        for a in self.actions(state,own_color):
             branch_utility = self.min_value(self.result(state,a))
             utilities.append(branch_utility)
         idx = np.argmax(utilities)

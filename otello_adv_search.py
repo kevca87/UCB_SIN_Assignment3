@@ -23,12 +23,7 @@ def is_on_board(board,row,column):
     
     
     
-initialBoard = np.zeros((8,8))
-initialBoard[3,3] = 2
-initialBoard[4,4] = 2
-initialBoard[4,3] = 1
-initialBoard[3,4] = 1
-print(initialBoard)
+
 
 
 def otello_actions(board:ndarray,rival_color:int):
@@ -88,6 +83,12 @@ def otello_actions(board:ndarray,rival_color:int):
         if board[row,column] == own_color:
             actions.append((adj,[row,column]))
 
+    #numpy.
+    #elemento por elemento con matriz de identidad
+    #matriz identidad * parte del tablero.
+    #row vs row
+
+
 
     #Right-U
     up_right_adjacencies = [[position[0]-1,position[1]+1] for position in rival_positions if board[position[0]-1,position[1]+1] == 0]
@@ -125,13 +126,23 @@ def otello_actions(board:ndarray,rival_color:int):
 
     return actions
 
-print(otello_actions(initialBoard,2))
+
 
 def otello_terminal_test(state:ndarray):
     return 5
 
 def otello_heuristic(state:ndarray):
     return 5
+
+
+def draw_diagonal(next_state,min_row,max_row, min_column,max_column,color):
+    initial_min_column = min_column
+    while min_row <= max_row:
+        min_column = initial_min_column
+        while min_column <= max_column:
+            next_state[min_row,min_column] = color
+            min_column = min_column + 1
+            min_row = min_row + 1
 
 # action = np.array([row,column,color])[]
 
@@ -142,8 +153,52 @@ def otello_heuristic(state:ndarray):
 
 
 # action = np.array([0,5,1])
-def otello_result(state:ndarray, action):
+def otello_result(state:ndarray, action, color:int):
     next_state = state.copy()
-    next_state[action[0],action[1]] = action[2]
+    adjacency = action[0]
+    flank_pair = action[1]
+    next_state[adjacency[0],adjacency[1]] = color
+    adj_row = adjacency[0]
+    adj_column = adjacency[1]
+    flank_row = flank_pair[0]
+    flank_column = flank_pair[1] 
     
+    max_row = max(adj_row,flank_row)
+    min_row = min(adj_row,flank_row)
+
+    max_column = max(adj_column,flank_column)
+    min_column = min(adj_column,flank_column)
+
+    initial_min_column = min_column
+
+    if min_row == max_row or min_column == max_column:
+        while min_row <= max_row:
+            min_column = initial_min_column
+            while min_column <= max_column:
+                next_state[min_row,min_column] = color
+                min_column = min_column + 1
+            min_row = min_row + 1
+    else:
+        draw_diagonal(next_state,min_row,max_row, min_column,max_column,color)
     return next_state
+
+
+initialBoard = np.zeros((8,8),dtype=int)
+initialBoard[3,3] = 2
+initialBoard[4,4] = 2
+initialBoard[4,3] = 1
+initialBoard[3,4] = 1
+print(initialBoard)
+print(otello_actions(initialBoard,2))
+action = otello_actions(initialBoard,2)[3]
+print(action)
+s1 = otello_result(initialBoard,action,1)
+
+print('---------------------------')
+print(s1)
+actions = otello_actions(s1,1)
+print(actions)
+action = actions[1]
+s2 = otello_result(s1,action,2)
+print(s2)
+
