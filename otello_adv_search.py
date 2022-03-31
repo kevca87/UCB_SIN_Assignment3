@@ -110,7 +110,7 @@ def otello_actions(board:ndarray,rival_color:int):
             actions.append((adj,[row,column]))
     
     #Left-D
-    down_left_adjacencies = [[position[0]+1,position[1]-1] for position in rival_positions if board[position[0]+1,position[1]-11] == 0]
+    down_left_adjacencies = [[position[0]+1,position[1]-1] for position in rival_positions if board[position[0]+1,position[1]-1] == 0]
     for adj in down_left_adjacencies:
         row = adj[0] -1
         column = adj[1] + 1
