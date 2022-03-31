@@ -34,13 +34,21 @@ def otello_actions(board:ndarray,rival_color:int):
     #Up
     up_adjacencies = [[position[0]-1,position[1]] for position in rival_positions if board[position[0]-1,position[1]] == 0]
     own_color = get_oposite_color(rival_color)
+    #new_actions = []
     for adj in up_adjacencies:
+        
+        #action = np.zeros((8,8),dtype=int)
+
         row = adj[0] + 1
         column = adj[1]
         while board[row,column] != own_color and board[row,column]!=0 and row < board.shape[0]:
             row = row + 1
+            #action[row,column] = own_color - board[row,column]
         if board[row,column] == own_color:
             actions.append((adj,[row,column]))
+            #new_actions.append(action)
+    
+    #print(new_actions)
     
     #Down
     down_adjacencies = [[position[0]+1,position[1]] for position in rival_positions if board[position[0]+1,position[1]] == 0]
@@ -185,22 +193,22 @@ def otello_result(state:ndarray, action, color:int):
 def otello_utility(state:ndarray):
     return state.sum()
 
-initialBoard = np.zeros((8,8),dtype=int)
-initialBoard[3,3] = -1
-initialBoard[4,4] = -1
-initialBoard[4,3] = 1
-initialBoard[3,4] = 1
-print(initialBoard)
-print(otello_actions(initialBoard,-1))
-action = otello_actions(initialBoard,-1)[3]
-print(action)
-s1 = otello_result(initialBoard,action,1)
+# initialBoard = np.zeros((8,8),dtype=int)
+# initialBoard[3,3] = -1
+# initialBoard[4,4] = -1
+# initialBoard[4,3] = 1
+# initialBoard[3,4] = 1
+# print(initialBoard)
+# print(otello_actions(initialBoard,-1))
+# action = otello_actions(initialBoard,-1)[3]
+# print(action)
+# s1 = otello_result(initialBoard,action,1)
 
-print('---------------------------')
-print(s1)
-actions = otello_actions(s1,1)
-print(actions)
-action = actions[1]
-s2 = otello_result(s1,action,-1)
-print(s2)
-print(otello_utility(s2))
+# print('---------------------------')
+# print(s1)
+# actions = otello_actions(s1,1)
+# print(actions)
+# action = actions[1]
+# s2 = otello_result(s1,action,-1)
+# print(s2)
+# print(otello_utility(s2))
