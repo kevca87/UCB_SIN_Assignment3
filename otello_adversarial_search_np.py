@@ -1,5 +1,5 @@
 from cProfile import label
-from turtle import up
+from turtle import shape, up
 from matplotlib.pyplot import axis
 import numpy as np
 from numpy import ndarray
@@ -35,7 +35,7 @@ def otello_actions(board:ndarray,color:int):
     rival_positions = np.array([[row,column] for row, column in zip(rival_positions[0],rival_positions[1])])
     #Up
     up_adjacencies = [[position[0]-1,position[1]] for position in rival_positions if is_on_board(board, position[0]-1,position[1]) and board[position[0]-1,position[1]] == 0]
-    own_color = get_oposite_color(rival_color)
+    own_color = color
     
     new_actions = []
     for adj in up_adjacencies:
@@ -45,15 +45,22 @@ def otello_actions(board:ndarray,color:int):
         row = adj[0]
         column = adj[1]
         action[row,column] = own_color - board[row,column]
-        
+
         row = adj[0] + 1
         column = adj[1]
 
-        while is_on_board(board,row,column) and board[row,column] != own_color and board[row,column]!=0:
-            action[row,column] = own_color - board[row,column]
-            row = row + 1
-        if is_on_board(board,row,column) and board[row,column] == own_color:
-            actions.append((adj,[row,column]))
+        #EQUIVALENT TO THE 2 LINES COMMENTED BELOW, MORE OPTIMAL BASED ON THE NEXT LINK
+        #https://stackoverflow.com/a/16244044/18366207 
+        flank_limit = np.argmax(board[row:,column]==own_color) + row
+        
+        # #idx of the own color tiles 
+        # own_color_tiles_row_idx = np.where(board[row:,column]==own_color)[0]
+        # #if exist a pair tile to flank the rival tiles get the the first row index
+        # flank_limit = row + own_color_tiles_row_idx[0] if own_color_tiles_row_idx.shape[0] > 0 else None
+
+        if flank_limit != None:
+            #generate the action (addition complement of the current state to get the next state) starting in row 
+            action[row:flank_limit,column] = own_color - board[row:flank_limit,column]
             new_actions.append(action)
     
     #Down

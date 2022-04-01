@@ -2,7 +2,7 @@ from time import sleep
 from turtle import color
 import numpy as np
 import matplotlib.pyplot as plt
-from otello_adv_search import *
+from otello_adversarial_search_np import *
 
 x = np.linspace(0, 6*np.pi, 100)
 y = np.sin(x)
@@ -72,13 +72,9 @@ while movement != 'exit':
     #print(action)
     
     actions = otello_actions(state_i,color)
-    #print(actions)
+    print(actions)
 
     actions = list(filter(lambda a: a[movement[0],movement[1]] != 0, actions))
-
-    if len(actions) > 1:
-        for a in actions[1:]:
-            a[movement[0],movement[1]] = 0
     
     for action in actions:
         #that allow draw eatings in differents directions at the same time.
