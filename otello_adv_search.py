@@ -1,4 +1,6 @@
+from cProfile import label
 from turtle import up
+from matplotlib.pyplot import axis
 import numpy as np
 from numpy import ndarray
 import copy
@@ -19,6 +21,10 @@ def get_oposite_color(color):
 
 def is_on_board(board,row,column):
     return row < board.shape[0] and row >= 0 and column < board.shape[1] and column >= 0
+
+# def 
+#     row, column = np.where((previous_state == 0)&(current_state != 0))
+#     return  
 
 def otello_actions(board:ndarray,color:int):
     actions = []
@@ -171,7 +177,21 @@ def otello_actions(board:ndarray,color:int):
             actions.append((adj,[row,column]))
             new_actions.append(action)
 
-    return new_actions
+    result_actions = []
+    tiles_added = []
+    for action in new_actions:
+        row, column = np.where(action**2 == 1)
+        tiles_added.append([row[0],column[0]])
+    tiles_added = np.unique(tiles_added,axis=0)
+    for tile_pos in tiles_added:
+        common_movement = list(filter(lambda a: a[tile_pos[0],tile_pos[1]]**2 == 1, new_actions))
+        if len(common_movement) >1:
+            for action in common_movement[1:]:
+                action[tile_pos[0],tile_pos[1]] = 0
+        result_action = sum(common_movement)
+        result_actions.append(result_action)
+             
+    return result_actions
 
 def otello_terminal_test(state:ndarray, color):
     return len(otello_actions(state,color))  == 0
@@ -179,6 +199,14 @@ def otello_terminal_test(state:ndarray, color):
 def otello_heuristic(state:ndarray):
     return state.sum()
 
+def otello_heuristic_possible_actions(state:ndarray, color: int):
+    actions = otello_actions(state,color)
+    quantity_of_actions = len(actions) * color
+    return quantity_of_actions
+
+def otello_compose_heuristic(state:ndarray, color):
+    return state.sum() + otello_heuristic_possible_actions(state, color)
+    
 # color 
 # 0 = empty
 # 1 = black
