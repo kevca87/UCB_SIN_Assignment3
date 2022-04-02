@@ -4,10 +4,11 @@ from time import sleep
 from turtle import color
 import numpy as np
 import matplotlib.pyplot as plt
-from adversarial_search import OtelloMinMaxWithDepth
+from adversarial_search import OthelloMinMaxAlphaBetaWithDepth
+#from adversarial_search import OthelloMinMaxWithDepth
 import time
 
-from otello_adv_search import *
+from othello_adv_search import *
 
 def get_initial_state():
     s0 = np.zeros((8,8),dtype=int)
@@ -32,12 +33,15 @@ def to_action(movement):
 print('OTHELLO MASTER PC vs. PC')
 
 heuristics = {
-    #'possible actions':otello_heuristic_possible_actions,
-    'count tiles sum':otello_heuristic_count_tiles,
-    #'count tiles sum + possible actions':otello_heuristic_count_tiles
+    #'possible actions':othello_heuristic_possible_actions,
+    'count tiles sum':othello_heuristic_count_tiles,
+    #'count tiles sum + possible actions':othello_heuristic_count_tiles
 }
 
-depth = 5
+
+depth = 3
+#depth = 4
+#depth = 5
 
 
 
@@ -80,15 +84,17 @@ def game(heuristic,depth):
     colors = []
 
     #algorithm set
-    om = OtelloMinMaxWithDepth()
-    om.utility = otello_utility
-    om.actions = otello_actions
-    om.result = otello_result
-    om.terminal_test = otello_terminal_test
+    om = OthelloMinMaxAlphaBetaWithDepth()
+    #om = OthelloMinMaxWithDepth()
+    om.utility = othello_utility
+    om.actions = othello_actions
+    om.result = othello_result
+    om.terminal_test = othello_terminal_test
     om.heuristic = heuristic
 
     initial_state = get_initial_state()
     state_i = initial_state
+    n_actions_expanded = []
 
     while True:
         print(state_i)
@@ -109,22 +115,24 @@ def game(heuristic,depth):
         if color == pc1_color:
             player.append(f'PC1')
             print('PC1 thinking ...')
-            action = om.min_max_cut_off(state_i,pc1_color,depth)
+            action, actions_expanded = om.min_max_cut_off(state_i,pc1_color,depth)
 
         if color == pc2_color:
             player.append(f'PC2')
             print('PC2 thinking ...')
-            action = om.min_max_cut_off(state_i,pc2_color,depth)
+            action, actions_expanded = om.min_max_cut_off(state_i,pc2_color,depth)
 
         end = time.time()
         elapsed_seconds = end - start
+        n_actions_expanded.append(actions_expanded)
+        print('Actions expanded: ',actions_expanded)
         print(f'Time needed {elapsed_seconds}')
         
         
         
 
-        if otello_terminal_test(state_i,color):
-            utilities.append(otello_utility(state_i))
+        if othello_terminal_test(state_i,color):
+            utilities.append(othello_utility(state_i))
             movement = 'ND'
             print(f'{color} -> {movement}')
             movements.append(movement)
@@ -133,7 +141,7 @@ def game(heuristic,depth):
             times.append(elapsed_seconds)
             break
         else:
-            state_i = otello_result(state_i,action)
+            state_i = othello_result(state_i,action)
             movement = action_to_movement(previous_state,state_i)
             print(f'{color} -> {movement}')
             movements.append(movement)
@@ -148,7 +156,7 @@ def game(heuristic,depth):
         color = color * -1
 
     try:
-        game_details_df = pd.DataFrame({'Player':player,'Movements':movements,'Times':times, 'In-FavorTiles':colors, 'Heuristic':utilities})
+        game_details_df = pd.DataFrame({'Player':player,'Movements':movements,'Times':times, 'In-FavorTiles':colors, 'Heuristic':utilities, 'Actions expanded':n_actions_expanded})
         file_name = input('Your file name: ')
         game_details_df.to_csv(f'{file_name}_d{depth}.csv')
     except:

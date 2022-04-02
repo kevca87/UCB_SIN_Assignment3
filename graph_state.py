@@ -2,7 +2,7 @@ from time import sleep
 from turtle import color
 import numpy as np
 import matplotlib.pyplot as plt
-from otello_adversarial_search_np import *
+from othello_adversarial_search_np import *
 
 x = np.linspace(0, 6*np.pi, 100)
 y = np.sin(x)
@@ -71,9 +71,9 @@ while movement != 'exit':
     movement = to_action(movement)
     #print(action)
     
-    actions = otello_actions(state_i,color)
+    actions = othello_actions(state_i,color)
     print(actions)
 
     action = list(filter(lambda a: a[movement[0],movement[1]] != 0, actions))[0]
-    state_i = otello_result(state_i,action)
+    state_i = othello_result(state_i,action)
     color = color * -1

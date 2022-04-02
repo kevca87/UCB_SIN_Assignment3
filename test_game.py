@@ -1,5 +1,5 @@
 import unittest
-from adversarial_search import MinMaxWithDepth
+from adversarial_search import OtelloMinMaxAlphaBetaWithDepth
 from otello_adv_search import *
 import numpy as np
 

@@ -4,8 +4,8 @@ from time import sleep
 from turtle import color
 import numpy as np
 import matplotlib.pyplot as plt
-from otello_adv_search import *
-from adversarial_search import OtelloMinMaxWithDepth
+from othello_adv_search import *
+from adversarial_search import OthelloMinMaxAlphaBetaWithDepth
 import time
 
 def get_initial_state():
@@ -28,16 +28,6 @@ def to_action(movement):
     column = ord(column_str) - 65
     return [row,column]
 
-initial_state = get_initial_state()
-state_i = initial_state
-
-om = OtelloMinMaxWithDepth()
-om.utility = otello_utility
-om.actions = otello_actions
-om.result = otello_result
-om.terminal_test = otello_terminal_test
-om.heuristic = otello_heuristic_count_tiles
-depth = 5
 
 
 print('OTHELLO MASTER')
@@ -92,15 +82,16 @@ utilities = []
 colors = []
 
 #algorithm set
-om = OtelloMinMaxWithDepth()
-om.utility = otello_utility
-om.actions = otello_actions
-om.result = otello_result
-om.terminal_test = otello_terminal_test
-om.heuristic = otello_heuristic_count_tiles
+om = OthelloMinMaxAlphaBetaWithDepth()
+om.utility = othello_utility
+om.actions = othello_actions
+om.result = othello_result
+om.terminal_test = othello_terminal_test
+om.heuristic = othello_heuristic_count_tiles
 
 initial_state = get_initial_state()
 state_i = initial_state
+depth = 4
 
 while True:
     print(state_i)
@@ -121,11 +112,11 @@ while True:
     if color == pc1_color:
         player.append(f'PC1')
         print('PC1 thinking ...')
-        action = om.min_max_cut_off(state_i,pc1_color,depth)
+        action, expanded_states = om.min_max_cut_off(state_i,pc1_color,depth)
 
     if color == player_color:
         player.append('P1')
-        actions = otello_actions(state_i,color)
+        actions = othello_actions(state_i,color)
         movement = input('P1:')
         movements.append(movement)
         if movement == 'exit':
@@ -134,6 +125,7 @@ while True:
         
         action = list(filter(lambda a: a[movement[0],movement[1]] != 0, actions))[0]
 
+    print(action)
     end = time.time()
     elapsed_seconds = end - start
     print(f'Time needed {elapsed_seconds}')
@@ -141,8 +133,8 @@ while True:
     
     
 
-    if otello_terminal_test(state_i,color):
-        utilities.append(otello_utility(state_i))
+    if othello_terminal_test(state_i,color):
+        utilities.append(othello_utility(state_i))
         movement = 'ND'
         print(f'{color} -> {movement}')
         movements.append(movement)
@@ -151,7 +143,7 @@ while True:
         times.append(elapsed_seconds)
         break
     else:
-        state_i = otello_result(state_i,action)
+        state_i = othello_result(state_i,action)
         movement = action_to_movement(previous_state,state_i)
         print(f'{color} -> {movement}')
         movements.append(movement)

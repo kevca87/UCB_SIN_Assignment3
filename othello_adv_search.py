@@ -26,7 +26,7 @@ def is_on_board(board,row,column):
 #     row, column = np.where((previous_state == 0)&(current_state != 0))
 #     return  
 
-def otello_actions(board:ndarray,color:int):
+def othello_actions(board:ndarray,color:int):
     actions = []
 
     rival_color = color * -1
@@ -194,27 +194,27 @@ def otello_actions(board:ndarray,color:int):
              
     return result_actions
 
-def otello_terminal_test(state:ndarray, color):
-    return len(otello_actions(state,color))  == 0
+def othello_terminal_test(state:ndarray, color):
+    return len(othello_actions(state,color))  == 0
 
-def otello_heuristic_count_tiles(state:ndarray,color):
+def othello_heuristic_count_tiles(state:ndarray,color):
     return state.sum()
 
-def otello_heuristic_possible_actions(state:ndarray, color: int):
-    actions = otello_actions(state,color)
+def othello_heuristic_possible_actions(state:ndarray, color: int):
+    actions = othello_actions(state,color)
     quantity_of_actions = len(actions) * color
     return quantity_of_actions
 
-def otello_compose_heuristic(state:ndarray, color):
-    return state.sum() + otello_heuristic_possible_actions(state, color)
+def othello_compose_heuristic(state:ndarray, color):
+    return state.sum() + othello_heuristic_possible_actions(state, color)
     
 # color 
 # 0 = empty
 # 1 = black
 # -1 = white
 
-def otello_result(state:ndarray, action):
+def othello_result(state:ndarray, action):
     return state + action
 
-def otello_utility(state:ndarray):
+def othello_utility(state:ndarray):
     return state.sum()
