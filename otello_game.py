@@ -8,26 +8,6 @@ from otello_adv_search import *
 from adversarial_search import OtelloMinMaxWithDepth
 import time
 
-plt.ion()
-
-plt.rcParams['xtick.bottom'] = plt.rcParams['xtick.labelbottom'] = False
-plt.rcParams['xtick.top'] = plt.rcParams['xtick.labeltop'] = True
-
-fig = plt.figure()
-ax = fig.gca()
-
-ax.set_xticks(np.arange(0.5, 8.5, 1))
-ax.set_yticks(np.arange(-0.5, -8.5, -1))
-
-ax.set_yticklabels(np.arange(1, 10, 1),minor=True)
-ax.set_xticklabels(['A','B','C','D','E','F','G','H'],minor=True)
-
-ax.set_xticks(np.arange(0, 9, 1),minor=True)
-ax.set_yticks(np.arange(0, -9, -1),minor=True)
-
-# Gridlines based on minor ticks
-ax.grid(which='major', color='grey', linestyle='-', linewidth=1)
-
 def get_initial_state():
     s0 = np.zeros((8,8),dtype=int)
     s0[3,3] = -1
@@ -56,7 +36,8 @@ om.utility = otello_utility
 om.actions = otello_actions
 om.result = otello_result
 om.terminal_test = otello_terminal_test
-om.heuristic = otello_heuristic_possible_actions
+om.heuristic = otello_heuristic_count_tiles
+depth = 5
 
 
 print('OTHELLO MASTER')
@@ -64,7 +45,8 @@ print('Select your color')
 print('(  1 ) Black')
 print('( -1 ) White')
 player_color = int(input())
-machine_color = player_color * -1
+pc1_color = player_color * -1
+
 
 movement = ''
 color = 1
@@ -76,10 +58,55 @@ player = []
 utilities = []
 colors = []
 
+
+plt.ion()
+
+plt.rcParams['xtick.bottom'] = plt.rcParams['xtick.labelbottom'] = False
+plt.rcParams['xtick.top'] = plt.rcParams['xtick.labeltop'] = True
+
+fig = plt.figure()
+ax = fig.gca()
+
+ax.set_xticks(np.arange(0.5, 8.5, 1))
+ax.set_yticks(np.arange(-0.5, -8.5, -1))
+
+ax.set_yticklabels(np.arange(1, 10, 1),minor=True)
+ax.set_xticklabels(['A','B','C','D','E','F','G','H'],minor=True)
+
+ax.set_xticks(np.arange(0, 9, 1),minor=True)
+ax.set_yticks(np.arange(0, -9, -1),minor=True)
+
+# Gridlines based on minor ticks
+ax.grid(which='major', color='grey', linestyle='-', linewidth=1)
+
+movement = ''
+
+#the black tiles always start
+color = 1
+
+#data recopilation
+movements = []
+times = []
+player = []
+utilities = []
+colors = []
+
+#algorithm set
+om = OtelloMinMaxWithDepth()
+om.utility = otello_utility
+om.actions = otello_actions
+om.result = otello_result
+om.terminal_test = otello_terminal_test
+om.heuristic = otello_heuristic_count_tiles
+
+initial_state = get_initial_state()
+state_i = initial_state
+
 while True:
     print(state_i)
     previous_state = state_i.copy()
 
+    #show the board
     blacks = np.where(state_i == 1)
     whites = np.where(state_i == -1)
     empties = np.where(state_i == 0)
@@ -91,49 +118,64 @@ while True:
 
     start = time.time()
 
-    if color == machine_color:
-
+    if color == pc1_color:
         player.append(f'PC1')
-        actions = [om.min_max_cut_off(state_i,machine_color,4)]
-        print('PC1')
+        print('PC1 thinking ...')
+        action = om.min_max_cut_off(state_i,pc1_color,depth)
 
     if color == player_color:
-        player.append(f'PC2')
-        actions = [om.min_max_cut_off(state_i,player_color,4)]
-        print('PC2')
-        # player.append('P1')
-        # movement = input('P1:')
-        # movements.append(movement)
-        # if movement == 'exit':
-        #     break
-        # movement = to_action(movement)
-        # actions = otello_actions(state_i,color)
-        # actions = list(filter(lambda a: a[movement[0],movement[1]] != 0, actions))
+        player.append('P1')
+        actions = otello_actions(state_i,color)
+        movement = input('P1:')
+        movements.append(movement)
+        if movement == 'exit':
+            break
+        movement = to_action(movement)
+        
+        action = list(filter(lambda a: a[movement[0],movement[1]] != 0, actions))[0]
 
     end = time.time()
     elapsed_seconds = end - start
-    times.append(elapsed_seconds)
-    for action in actions:
-        #that allow draw eatings in differents directions at the same time.
-        #message 31/03 10:56
-        state_i = otello_result(state_i,action)
-        #if color == machine_color:
-        movement = action_to_movement(previous_state,state_i)
-        print(movement)
+    print(f'Time needed {elapsed_seconds}')
+    
+    
+    
+
+    if otello_terminal_test(state_i,color):
+        utilities.append(otello_utility(state_i))
+        movement = 'ND'
+        print(f'{color} -> {movement}')
         movements.append(movement)
         my_color = np.where(state_i==color)
         colors.append(len(my_color[0]))
-    if otello_terminal_test(state_i,color):
-        utilities.append(otello_utility(state_i))
+        times.append(elapsed_seconds)
         break
     else:
-        u = otello_compose_heuristic(state_i,color)
+        state_i = otello_result(state_i,action)
+        movement = action_to_movement(previous_state,state_i)
+        print(f'{color} -> {movement}')
+        movements.append(movement)
+        my_color = np.where(state_i==color)
+        colors.append(len(my_color[0]))
+        times.append(elapsed_seconds)
+        u = om.heuristic(state_i,color)
         utilities.append(u)
+
+    
+
     color = color * -1
 
 
 
-
-my_movements = pd.DataFrame({'Player':player,'Movements':movements,'Times':times, 'In-FavorTiles':colors, 'Heuristic':utilities})
-file_name = input('Your file name movements_.csv: ')
-my_movements.to_csv(f'movements_{file_name}.csv')
+try:
+    game_details_df = pd.DataFrame({'Player':player,'Movements':movements,'Times':times, 'In-FavorTiles':colors, 'Heuristic':utilities})
+    file_name = input('Your file name: ')
+    game_details_df.to_csv(f'{file_name}_d{depth}.csv')
+except:
+    print(file_name)
+    print(depth)
+    print('player:',len(player))
+    print('movements:',len(movements))
+    print('times:',len(times))
+    print('colors:',len(colors))
+    print('heuristics:',len(utilities))

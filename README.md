@@ -57,7 +57,7 @@ As required, the program has been evaluted with these heuristics functions
         The third proposed heuristic is a combination of the previos heuristics. It returns the sum of the board and the quantity of actions given a state. With this value the player will know how convenient is that state given that two values are considered. 
     
     The experiments for every heuristic function is in heuristics_analysis.ipynb
-    We have chosen the .......
+    We have chosen the First Heuistic, because it is the one with the best behavior. It takes the algorithm a considered quantity of rounds to find a winner, it is not that easy to win. 
 
 Hence we are working with the MinMaxWithDepth algorithm, we won't expand the whole game three, that's why the heuristics  represent an approach to the utility value and these will be used when the depth is reached. Even though we are also considering the utility value because there may be a case when the depth value represents the final state. That might happen specially when the board is almost full and there are no a lot of possible actions. 
 

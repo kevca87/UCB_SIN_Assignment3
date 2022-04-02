@@ -32,12 +32,12 @@ def to_action(movement):
 print('OTHELLO MASTER PC vs. PC')
 
 heuristics = {
-    'possible actions':otello_heuristic_possible_actions,
+    #'possible actions':otello_heuristic_possible_actions,
     'count tiles sum':otello_heuristic_count_tiles,
-    'count tiles sum + possible actions':otello_heuristic_count_tiles
+    #'count tiles sum + possible actions':otello_heuristic_count_tiles
 }
 
-depth = 4
+depth = 5
 
 
 
@@ -162,4 +162,5 @@ def game(heuristic,depth):
         print('heuristics:',len(utilities))
 
 for heuristic in heuristics:
+    print(heuristic)
     game(heuristics[heuristic],depth)
