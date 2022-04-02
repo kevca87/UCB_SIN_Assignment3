@@ -56,7 +56,7 @@ om.utility = otello_utility
 om.actions = otello_actions
 om.result = otello_result
 om.terminal_test = otello_terminal_test
-om.heuristic = otello_compose_heuristic
+om.heuristic = otello_heuristic_possible_actions
 
 
 print('OTHELLO MASTER')
@@ -94,12 +94,12 @@ while True:
     if color == machine_color:
 
         player.append(f'PC1')
-        actions = [om.min_max_cut_off(state_i,machine_color,5)]
+        actions = [om.min_max_cut_off(state_i,machine_color,4)]
         print('PC1')
 
     if color == player_color:
         player.append(f'PC2')
-        actions = [om.min_max_cut_off(state_i,player_color,5)]
+        actions = [om.min_max_cut_off(state_i,player_color,4)]
         print('PC2')
         # player.append('P1')
         # movement = input('P1:')

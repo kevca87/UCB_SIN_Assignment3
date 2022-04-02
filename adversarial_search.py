@@ -48,10 +48,10 @@ class OtelloMinMaxWithDepth:
 
     def min_value(self,state,depth,alpha=-np.inf,beta=np.inf,prunned=0):
         color = -1
-        if self.cut_off(depth):
-            return self.heuristic(state,color)
         if self.terminal_test(state,color):
             return self.utility(state)
+        if self.cut_off(depth):
+            return self.heuristic(state,color)
         u = np.inf
         actions = self.actions(state,color)
         actions_expanded = 0
@@ -66,10 +66,10 @@ class OtelloMinMaxWithDepth:
 
     def max_value(self,state,depth,alpha=-np.inf,beta=np.inf,prunned=0):
         color = 1
-        if self.cut_off(depth):
-            return self.heuristic(state,color)
         if self.terminal_test(state,color):
             return self.utility(state)
+        if self.cut_off(depth):
+            return self.heuristic(state,color)
         u = - np.inf
         actions = self.actions(state,color)
         actions_expanded = 0

@@ -39,13 +39,10 @@ def otello_actions(board:ndarray,color:int):
     
     new_actions = []
     for adj in up_adjacencies:
-        
         action = np.zeros((8,8),dtype=int)
-        
         row = adj[0]
         column = adj[1]
         action[row,column] = own_color - board[row,column]
-
         row = adj[0] + 1
         column = adj[1]
 
@@ -204,7 +201,8 @@ def otello_actions(board:ndarray,color:int):
 def otello_terminal_test(state:ndarray, color):
     return len(otello_actions(state,color))  == 0
 
-def otello_heuristic(state:ndarray):
+#color parameter added to follow the signature of the rest
+def otello_heuristic_count_tiles(state:ndarray,color):
     return state.sum()
 
 def otello_heuristic_possible_actions(state:ndarray, color: int):

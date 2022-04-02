@@ -197,7 +197,7 @@ def otello_actions(board:ndarray,color:int):
 def otello_terminal_test(state:ndarray, color):
     return len(otello_actions(state,color))  == 0
 
-def otello_heuristic(state:ndarray):
+def otello_heuristic_count_tiles(state:ndarray,color):
     return state.sum()
 
 def otello_heuristic_possible_actions(state:ndarray, color: int):
