@@ -22,24 +22,50 @@ We want to program an intelligent game where the computer is able to find the be
 In this case, given that we have 2 players,  we will follow the Adversarial search techniques:
     -   Initial State: As it was mentioned before, the initial state consists of a board with 4 tiles. 
     -   Final State: The final state is the board where there are no empty spaces or possible flank tiles. 
-    -   Players: The two players are the human and the computer.
+    -   Players: The two players are the human (or computer) and the computer.
     -   Actions: As it was indicated, depending on the tile you are considering, the player has a maximum of 8 possible positions. 
     -   Result: Giving the board, the position and the player, the result will be the board where the tile is positioned and the corresponding tile(s) was/were flanked.
     -   Utility: Given a final state, the utility function calculated a valyue to express if the player wins or loses. 
     -   Terminal Test: It determines if the game is over. 
 
+Understanding our board:
+    The implemented board is represented by an [8x8] matrix. For the interface, columns go from A to H from left to right and rows go from 1 to 8 from top to bottom. Internally, rows and columns go from 0 to 7 respectively. 
+    
+    Each empty position is symbolized by a 0, 1 represents a Black tile and -1 represents a White tile.
+
 As required, the program has been evaluted with these heuristics functions
     -   Heuristic 1
-        def otello_heuristic(state:ndarray):
+        def otello_heuristic_count_tiles(state:ndarray,color):
             return state.sum()
+        
+        In this heuristic we calculate the sum of the board. If there are more Black than White tiles, the result will be a positive number and it will increase as the presence of black tiles increases. On the other hand, the result will be a negative number when there are more White tiles. 
+        This heuristic represents the advantage you have, considering the difference between the positioned tiles. It will help the program to know when the board is on your favor, it means that there are more tiles of your color. 
+
     -   Heuristic 2
+        def otello_heuristic_possible_actions(state:ndarray, color: int):
+            actions = otello_actions(state,color)
+            quantity_of_actions = len(actions) * color
+            return quantity_of_actions
+        
+        This heuristic returns the quantity of possible actions given a board. The player will receive this quantity according to the respective sign → Possitive for Blacks and Negative for Whites. 
+        This represents the options the player has to flank one or various tiles. 
+    
     -   Heuristic 3
+        def otello_compose_heuristic(state:ndarray, color):
+            return otello_heuristic_count_tiles() + otello_heuristic_possible_actions(state, color)
+        
+        The third proposed heuristic is a combination of the previos heuristics. It returns the sum of the board and the quantity of actions given a state. With this value the player will know how convenient is that state given that two values are considered. 
+    
+    The experiments for every heuristic function is in heuristics_analysis.ipynb
     We have chosen the .......
-Hence we are working with the MinMaxWithDepth algorithm, we won't expand the whole game three, that's why the heuristics  represent an approach to the utility value and these will be used when the depth is reached. 
+
+Hence we are working with the MinMaxWithDepth algorithm, we won't expand the whole game three, that's why the heuristics  represent an approach to the utility value and these will be used when the depth is reached. Even though we are also considering the utility value because there may be a case when the depth value represents the final state. That might happen specially when the board is almost full and there are no a lot of possible actions. 
 
 The Cut-Off algorithm has been implemented and different 'Depth' values have been evaluated:
-    -   Value 1
-    -......
-    The best Depth is.... 
+    -  3
+    -  4
+    -  5
+    The depth value will help us to determine how many future states will be expanded. After evaluating those values, considering the efficiency of the program, we have found that 4 represents the best value, specially because the average run time is less than 10 seconds.
+    Experiments in.... 
 
 Alpha-Beta pruning is an other algorithm that helps us to get an efficient behavior, because we will prun the unnecesary states. When this optimization is applied...... 
