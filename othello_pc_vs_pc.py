@@ -39,8 +39,8 @@ heuristics = {
 }
 
 
-depth = 3
-#depth = 4
+#depth = 3
+depth = 4
 #depth = 5
 
 
@@ -112,6 +112,7 @@ def game(heuristic,depth):
 
         start = time.time()
 
+
         if color == pc1_color:
             player.append(f'PC1')
             print('PC1 thinking ...')
@@ -127,9 +128,6 @@ def game(heuristic,depth):
         n_actions_expanded.append(actions_expanded)
         print('Actions expanded: ',actions_expanded)
         print(f'Time needed {elapsed_seconds}')
-        
-        
-        
 
         if othello_terminal_test(state_i,color):
             utilities.append(othello_utility(state_i))

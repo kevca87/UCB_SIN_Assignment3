@@ -195,7 +195,7 @@ def othello_actions(board:ndarray,color:int):
     return result_actions
 
 def othello_terminal_test(state:ndarray, color):
-    return len(othello_actions(state,color))  == 0
+    return len(othello_actions(state,color))  == 0 and len(othello_actions(state,color*-1))  == 0
 
 def othello_heuristic_count_tiles(state:ndarray,color):
     return state.sum()

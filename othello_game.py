@@ -130,9 +130,6 @@ while True:
     elapsed_seconds = end - start
     print(f'Time needed {elapsed_seconds}')
     
-    
-    
-
     if othello_terminal_test(state_i,color):
         utilities.append(othello_utility(state_i))
         movement = 'ND'
@@ -152,7 +149,6 @@ while True:
         times.append(elapsed_seconds)
         u = om.heuristic(state_i,color)
         utilities.append(u)
-
     
 
     color = color * -1
