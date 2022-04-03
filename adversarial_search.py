@@ -25,7 +25,7 @@ class OthelloMinMaxAlphaBetaWithDepth:
             branch_utility, actions_expanded = self.min_value(self.result(state,a),depth)
             total_actions_expanded = total_actions_expanded + actions_expanded
             utilities.append(branch_utility)
-        best_action = None
+        best_action = np.zeros((8,8))
         if len(utilities) > 0:
             idx = np.argmax(utilities)
             best_action = actions[idx]
@@ -40,7 +40,7 @@ class OthelloMinMaxAlphaBetaWithDepth:
             branch_utility, actions_expanded = self.max_value(self.result(state,a),depth)
             total_actions_expanded = total_actions_expanded + actions_expanded
             utilities.append(branch_utility)
-        best_action = None
+        best_action = np.zeros((8,8))
         if len(utilities) > 0:
             idx = np.argmin(utilities)
             best_action = actions[idx]

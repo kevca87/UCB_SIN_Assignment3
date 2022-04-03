@@ -17,8 +17,13 @@ def get_initial_state():
     return s0
 
 def action_to_movement(previous_state, current_state):
-    row, column = np.where((previous_state == 0)&(current_state != 0))
-    return  chr(column[0] + 65) + str(row[0] +1)
+    ans = 'ND'
+    try:
+        row, column = np.where((previous_state == 0)&(current_state != 0))
+        ans = chr(column[0] + 65) + str(row[0] +1)
+    except:
+        ans = 'ND'
+    return ans 
 
 def to_action(movement):
     column_str = movement[0] 
@@ -112,8 +117,11 @@ while True:
         player.append(f'PC1')
         print('PC1 thinking ...')
         action, expanded_states = om.min_max_cut_off(state_i,pc1_color,depth)
+        print(action)
 
     if color == player_color:
+        if othello_terminal_test(state_i,color):
+            break
         actions = othello_actions(state_i,color)
         movement = input('P1:')
         if movement == 'exit':
@@ -162,6 +170,7 @@ winner = 'Black tiles' if othello_utility(state_i) > 0 else 'White tiles'
 print(f'{winner} win')
 
 try:
+    
     game_details_df = pd.DataFrame({'Player':player,'Movements':movements,'Times':times, 'In-FavorTiles':colors, 'Heuristic':utilities})
     file_name = input('Your file name: ')
     game_details_df.to_csv(f'{file_name}_d{depth}.csv')
