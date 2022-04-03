@@ -40,8 +40,8 @@ heuristics = {
 
 
 #depth = 3
-depth = 4
-#depth = 5
+#depth = 4
+depth = 5
 
 
 
@@ -152,6 +152,10 @@ def game(heuristic,depth):
         
 
         color = color * -1
+
+    print('GAME OVER')
+    winner = 'Black tiles' if othello_utility(state_i) > 0 else 'White tiles'
+    print(f'{winner} win')
 
     try:
         game_details_df = pd.DataFrame({'Player':player,'Movements':movements,'Times':times, 'In-FavorTiles':colors, 'Heuristic':utilities, 'Actions expanded':n_actions_expanded})

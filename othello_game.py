@@ -22,8 +22,7 @@ def action_to_movement(previous_state, current_state):
 
 def to_action(movement):
     column_str = movement[0] 
-    row_str = movement[1] 
-
+    row_str = movement[1]
     row = int(row_str) - 1
     column = ord(column_str) - 65
     return [row,column]
@@ -115,17 +114,22 @@ while True:
         action, expanded_states = om.min_max_cut_off(state_i,pc1_color,depth)
 
     if color == player_color:
-        player.append('P1')
         actions = othello_actions(state_i,color)
         movement = input('P1:')
-        movements.append(movement)
         if movement == 'exit':
             break
         movement = to_action(movement)
         
-        action = list(filter(lambda a: a[movement[0],movement[1]] != 0, actions))[0]
+        actions = list(filter(lambda a: a[movement[0],movement[1]] != 0, actions))
+        if len(actions) > 0:
+            action = actions[0]
+        else:
+            action = np.zeros((8,8))
+            print('Invalid movement try again ... ')
+            continue
+        movements.append(movement)
+        player.append('P1')
 
-    print(action)
     end = time.time()
     elapsed_seconds = end - start
     print(f'Time needed {elapsed_seconds}')
@@ -153,7 +157,9 @@ while True:
 
     color = color * -1
 
-
+print('GAME OVER')
+winner = 'Black tiles' if othello_utility(state_i) > 0 else 'White tiles'
+print(f'{winner} win')
 
 try:
     game_details_df = pd.DataFrame({'Player':player,'Movements':movements,'Times':times, 'In-FavorTiles':colors, 'Heuristic':utilities})
