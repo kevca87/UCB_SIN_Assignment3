@@ -1,3 +1,11 @@
+ # Installation guide
+
+ To run the game and play against the computer run the ```python othello_game.py``` script.
+
+Note: The principal libraries used were ```numpy``` and ```matplotlib```. 
+
+ The experiments were run in the script ```othello_pc_vs_pc.py```
+
 # Solution description
 
 When playing Othello, the following components are considered:
